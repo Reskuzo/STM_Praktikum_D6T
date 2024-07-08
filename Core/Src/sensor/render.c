@@ -45,21 +45,21 @@ uint16_t convert_temp_to_color(float temp) {
     if (temp >= 70)
     	return DARK_RED;
 
-    if (temp < 22) {
+    if (temp < ROOM_TEMP) {
     	// map temperature from ]-10, 22[ to [0, 1] for the blue to white gradient
-    	float temp_gradient = (temp + 10.f) / 32.0f;
+    	float temp_gradient = (temp + 10.f) / (ROOM_TEMP+10.f);
     	return pick_gradient_color(DARK_BLUE, WHITE, temp_gradient);
     }
 
-    if (temp < 36) {
+    if (temp < BODY_TEMP) {
         	// map temperature from [-22, 36[ to [0, 1] for the blue to white gradient
-        	float temp_gradient = (temp - 22.f) / 14.0f;
+        	float temp_gradient = (temp - ROOM_TEMP) / (BODY_TEMP-ROOM_TEMP);
         	return pick_gradient_color(WHITE, ORANGE, temp_gradient);
         }
 
 
     // map temperature from [36, 70] to [0, 1] for the orange to red gradient
-    float temp_gradient = (temp - 36.f) / 34.0f;
+    float temp_gradient = (temp - BODY_TEMP) / (70.f-BODY_TEMP);
     return pick_gradient_color(ORANGE, DARK_RED, temp_gradient);
 
 }
