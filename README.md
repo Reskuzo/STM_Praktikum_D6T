@@ -34,4 +34,5 @@ Yannick Pahlke 1841500 (@Reskuzo on Github)
 * Watchdog timer
 * Interrupts to fasten up
 * option to switch between sensor models (not able to test though)
+* Regelung/Glättung der Daten
   
