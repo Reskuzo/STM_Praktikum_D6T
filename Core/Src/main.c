@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "sensor/dt6.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,7 +43,6 @@
 /* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c2;
-
 I2S_HandleTypeDef hi2s3;
 
 QSPI_HandleTypeDef hqspi;
@@ -61,14 +60,10 @@ SRAM_HandleTypeDef hsram1;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_FSMC_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_I2C2_Init(void);
-static void MX_I2S3_Init(void);
-static void MX_QUADSPI_Init(void);
-static void MX_SDIO_SD_Init(void);
 static void MX_USART2_UART_Init(void);
-void MX_USB_HOST_Process(void);
+
 
 /* USER CODE BEGIN PFP */
 
@@ -108,16 +103,12 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_FSMC_Init();
   MX_I2C1_Init();
   MX_I2C2_Init();
-  MX_I2S3_Init();
-  MX_QUADSPI_Init();
-  MX_SDIO_SD_Init();
   MX_USART2_UART_Init();
-  MX_USB_HOST_Init();
-  /* USER CODE BEGIN 2 */
 
+  /* USER CODE BEGIN 2 */
+  d6t_reading_to_lcd(&hi2c2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -125,7 +116,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    MX_USB_HOST_Process();
+
 
     /* USER CODE BEGIN 3 */
   }

@@ -20,6 +20,7 @@ RM := rm -rf
 -include Drivers/BSP/Components/ls016b8uy/subdir.mk
 -include Drivers/BSP/Components/ft6x06/subdir.mk
 -include Core/Startup/subdir.mk
+-include Core/Src/sensor/subdir.mk
 -include Core/Src/subdir.mk
 -include objects.mk
 

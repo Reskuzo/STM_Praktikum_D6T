@@ -5,14 +5,9 @@
  *      Author: yannick
  */
 
-#include <stdio.h>
+#include "main.h"
+#include "render.h"
 
-#define DARK_BLUE (uint16_t)0x001F
-#define ORANGE 	  (uint16_t)0xFDA0
-#define WHITE     (uint16_t)0xffff
-#define DARK_RED  (uint16_t)0xF800
-#define H_CELL_COUNT 32
-#define V_CELL_COUNT 32
 
 // perform linear uint16_terpolation between two colors
 // source stackoverflow (with own adjustments, so no GPL License  needed)
@@ -71,7 +66,7 @@ uint16_t convert_temp_to_color(float temp) {
 
 /// display the temperature values as an image on the LCD screen
 /// make sure to initiate BSP_lcd before calling
-static void display_data_on_lcd(int* temperatures){
+void display_data_on_lcd(int* temperatures){
 	  /// get params of the screen
 	  int width = BSP_LCD_GetXSize()+10; // +10 for rounding errors
 	  int height = BSP_LCD_GetYSize() +10;

@@ -23,6 +23,7 @@ C_DEPS :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 Core/Src \
+Core/Src/sensor \
 Core/Startup \
 Drivers/BSP/Components/ft6x06 \
 Drivers/BSP/Components/ls016b8uy \

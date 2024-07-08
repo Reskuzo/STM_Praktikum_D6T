@@ -4,19 +4,15 @@
  *  Created on: Jul 8, 2024
  *      Author: yannick
  */
-/// generic
-#define NO_CONNECTION 0
-#define SUCCESS 1
 
 
-/// The D6T-32L-01A (that i was given measures in a 32x32 = 1024 pattern
-#define TEMP_VALUE_COUNT 1024
-#define ADDRESS 0x14
-#define CONNECTION_TRYS 10
+#include "communication.h"
 
 /// returns 1 if a connection on ADDRESS is received, else 0
-static int is_sensor_connected(){
+int is_sensor_connected(I2C_HandleTypeDef* hi2c2){
 	for (int i = 0; i< CONNECTION_TRYS; i++){
+	/// Command for telling the sensor we want to read data
+	uint8_t cmd = 0x4c;
 
 	HAL_StatusTypeDef status = HAL_I2C_Init(&hi2c2);
 	HAL_Delay(10);
@@ -32,7 +28,7 @@ static int is_sensor_connected(){
  * reads the raw temperature readings from the sensor into the readbuffer
  * Returns 0 if no sensor could be detected (else 1)
  */
-static int read_sensor_data(uint8_t* readbuffer, ){
+int read_sensor_data(uint8_t* readbuffer, I2C_HandleTypeDef* hi2c2 ){
 	 /// Each temperature reading consists of 2 8-Bit value (LOW-/HIGH-bit)
 	 /// Additionally one PTAT reading and one Checksuum value is transmitted
 	 int size = TEMP_VALUE_COUNT * 2 + 3;
@@ -63,10 +59,10 @@ static int read_sensor_data(uint8_t* readbuffer, ){
   };
 
 /// converts the raw sensor readings into sensor data in 10*degrees celsius
-static int sensor_data_to_temperatures(uint8_t* sensor_data, int* temperatures, int temp_value_count){
+int sensor_data_to_temperatures(uint8_t* sensor_data, int* temperatures){
 	/// each reading consists of a high reading and a low reading,
 	/// with high reading * 256 (max value 4 Bit) + low bits = temperature * 10
-	   for (int temp_index = 0; temp_index/2 < temp_value_count + 1; temp_index+=2){
+	   for (int temp_index = 0; temp_index/2 < TEMP_VALUE_COUNT + 1; temp_index+=2){
 	 	  temperatures[temp_index/2] = sensor_data[temp_index+1] * 256 + sensor_data[temp_index];
 	   }
 	   return SUCCESS;
