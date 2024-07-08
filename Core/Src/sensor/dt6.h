@@ -22,7 +22,7 @@ static void d6t_reading_to_lcd(I2C_HandleTypeDef* hi2c2){
 	int temp[TEMP_VALUE_COUNT+1];
 
 	while (1){
-		 read_sensor_data(buffer, &hi2c2);
+		 read_sensor_data(buffer, hi2c2);
 	     sensor_data_to_temperatures(buffer, temp);
 	     display_data_on_lcd(temp);
 	}

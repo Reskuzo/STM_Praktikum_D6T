@@ -105,7 +105,7 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   MX_I2C2_Init();
-  MX_USART2_UART_Init();
+  HAL_I2C_Init(&hi2c2);
 
   /* USER CODE BEGIN 2 */
   d6t_reading_to_lcd(&hi2c2);
