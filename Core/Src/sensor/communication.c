@@ -14,7 +14,7 @@
 #define ADDRESS 0x14
 #define CONNECTION_TRYS 10
 
-
+/// returns 1 if a connection on ADDRESS is received, else 0
 static int is_sensor_connected(){
 	for (int i = 0; i< CONNECTION_TRYS; i++){
 
@@ -62,4 +62,13 @@ static int read_sensor_data(uint8_t* readbuffer, ){
 	  return SUCCESS;
   };
 
+/// converts the raw sensor readings into sensor data in 10*degrees celsius
+static int sensor_data_to_temperatures(uint8_t* sensor_data, int* temperatures, int temp_value_count){
+	/// each reading consists of a high reading and a low reading,
+	/// with high reading * 256 (max value 4 Bit) + low bits = temperature * 10
+	   for (int temp_index = 0; temp_index/2 < temp_value_count + 1; temp_index+=2){
+	 	  temperatures[temp_index/2] = sensor_data[temp_index+1] * 256 + sensor_data[temp_index];
+	   }
+	   return SUCCESS;
+};
 
