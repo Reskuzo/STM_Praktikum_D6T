@@ -5,6 +5,14 @@
  *      Author: yannick
  */
 
+#include <stdio.h>
+
+#define DARK_BLUE (uint16_t)0x001F
+#define ORANGE 	  (uint16_t)0xFDA0
+#define WHITE     (uint16_t)0xffff
+#define DARK_RED  (uint16_t)0xF800
+#define H_CELL_COUNT 32
+#define V_CELL_COUNT 32
 
 // perform linear uint16_terpolation between two colors
 // source stackoverflow (with own adjustments, so no GPL License  needed)
