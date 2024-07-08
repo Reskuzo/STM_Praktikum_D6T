@@ -60,3 +60,30 @@ uint16_t convert_temp_to_color(float temp) {
     return pick_gradient_color(ORANGE, DARK_RED, temp_gradient);
 
 }
+
+/// display the temperature values as an image on the LCD screen
+/// make sure to initiate BSP_lcd before calling
+static void display_data_on_lcd(int* temperatures){
+	  /// get params of the screen
+	  int width = BSP_LCD_GetXSize()+10; // +10 for rounding errors
+	  int height = BSP_LCD_GetYSize() +10;
+
+	  /// calculate Height / with of cells
+
+	  int cell_width = width / H_CELL_COUNT;
+	  int cell_hight = height/ V_CELL_COUNT;
+
+	  /// iterate over rows/columns
+	  for (int row = 0; row < V_CELL_COUNT; row++ )
+		  for (int col = 0; col < H_CELL_COUNT; col++){
+			  BSP_LCD_SetTextColor(
+					  convert_temp_to_color(
+							  /// +1 because of the PTAT temperature value at temperatures[0]
+							  (float)temperatures[row * 32 + col+1] / 10.f
+										   )
+							  );
+			  BSP_LCD_FillRect(col * cell_width+10, row * cell_hight+10, cell_width, cell_hight);
+			  // +20 = centering as the screen doesn't start by 0 and its better with a border on every side
+		  }
+}
+
