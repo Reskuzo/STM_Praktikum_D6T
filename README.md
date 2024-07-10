@@ -1,5 +1,7 @@
 # STM_Praktikum Sensor D6T-32L-01A
 /// overview
+## Principle of sensor operation
+![Structure of the temperature sensor](file:./images/sensor_structure.png)
 
 ## Getting started
 The components used for this project are:
