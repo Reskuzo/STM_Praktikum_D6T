@@ -22,7 +22,7 @@
 
 int is_sensor_connected();
 
-int read_sensor_data(uint8_t* readbuffer, I2C_HandleTypeDef* hi2c2 );
+int read_sensor_data(uint8_t* readbuffer);
 
 int sensor_data_to_temperatures(uint8_t* sensor_data, int* temperatures);
 

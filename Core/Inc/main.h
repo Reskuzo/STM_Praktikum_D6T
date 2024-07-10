@@ -28,12 +28,12 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
-#include "stm32412g_discovery.h"
-#include "stm32412g_discovery_lcd.h"
+
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "stm32412g_discovery.h"
+#include "stm32412g_discovery_lcd.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -43,7 +43,8 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
+extern I2C_HandleTypeDef hi2c2;
+extern IWDG_HandleTypeDef hiwdg;
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/

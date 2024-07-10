@@ -41,11 +41,13 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c2;
+IWDG_HandleTypeDef hiwdg;
+
+
 I2S_HandleTypeDef hi2s3;
 
-QSPI_HandleTypeDef hqspi;
+
 
 SD_HandleTypeDef hsd;
 
@@ -60,9 +62,8 @@ SRAM_HandleTypeDef hsram1;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_I2C1_Init(void);
 static void MX_I2C2_Init(void);
-static void MX_USART2_UART_Init(void);
+static void MX_IWDG_Init(void);
 
 
 /* USER CODE BEGIN PFP */
@@ -103,12 +104,12 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_I2C1_Init();
   MX_I2C2_Init();
   HAL_I2C_Init(&hi2c2);
+  MX_IWDG_Init();
 
   /* USER CODE BEGIN 2 */
-  d6t_reading_to_lcd(&hi2c2);
+  d6t_reading_to_lcd();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -116,7 +117,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+    MX_USB_HOST_Process();
 
     /* USER CODE BEGIN 3 */
   }
@@ -140,10 +141,12 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_LSI
+                              |RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = 4;
@@ -170,40 +173,6 @@ void SystemClock_Config(void)
     Error_Handler();
   }
   HAL_RCC_MCOConfig(RCC_MCO1, RCC_MCO1SOURCE_HSI, RCC_MCODIV_1);
-}
-
-/**
-  * @brief I2C1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_I2C1_Init(void)
-{
-
-  /* USER CODE BEGIN I2C1_Init 0 */
-
-  /* USER CODE END I2C1_Init 0 */
-
-  /* USER CODE BEGIN I2C1_Init 1 */
-
-  /* USER CODE END I2C1_Init 1 */
-  hi2c1.Instance = I2C1;
-  hi2c1.Init.ClockSpeed = 100000;
-  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
-  hi2c1.Init.OwnAddress1 = 0;
-  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c1.Init.OwnAddress2 = 0;
-  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN I2C1_Init 2 */
-
-  /* USER CODE END I2C1_Init 2 */
-
 }
 
 /**
@@ -275,37 +244,30 @@ static void MX_I2S3_Init(void)
 }
 
 /**
-  * @brief QUADSPI Initialization Function
+  * @brief IWDG Initialization Function
   * @param None
   * @retval None
   */
-static void MX_QUADSPI_Init(void)
+static void MX_IWDG_Init(void)
 {
 
-  /* USER CODE BEGIN QUADSPI_Init 0 */
+  /* USER CODE BEGIN IWDG_Init 0 */
 
-  /* USER CODE END QUADSPI_Init 0 */
+  /* USER CODE END IWDG_Init 0 */
 
-  /* USER CODE BEGIN QUADSPI_Init 1 */
+  /* USER CODE BEGIN IWDG_Init 1 */
 
-  /* USER CODE END QUADSPI_Init 1 */
-  /* QUADSPI parameter configuration*/
-  hqspi.Instance = QUADSPI;
-  hqspi.Init.ClockPrescaler = 0;
-  hqspi.Init.FifoThreshold = 4;
-  hqspi.Init.SampleShifting = QSPI_SAMPLE_SHIFTING_HALFCYCLE;
-  hqspi.Init.FlashSize = 24;
-  hqspi.Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_5_CYCLE;
-  hqspi.Init.ClockMode = QSPI_CLOCK_MODE_0;
-  hqspi.Init.FlashID = QSPI_FLASH_ID_1;
-  hqspi.Init.DualFlash = QSPI_DUALFLASH_DISABLE;
-  if (HAL_QSPI_Init(&hqspi) != HAL_OK)
+  /* USER CODE END IWDG_Init 1 */
+  hiwdg.Instance = IWDG;
+  hiwdg.Init.Prescaler = IWDG_PRESCALER_32;
+  hiwdg.Init.Reload = 4095;
+  if (HAL_IWDG_Init(&hiwdg) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN QUADSPI_Init 2 */
+  /* USER CODE BEGIN IWDG_Init 2 */
 
-  /* USER CODE END QUADSPI_Init 2 */
+  /* USER CODE END IWDG_Init 2 */
 
 }
 
@@ -433,6 +395,22 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : QSPI_BK1_IO3_Pin QSPI_BK1_IO2_Pin */
+  GPIO_InitStruct.Pin = QSPI_BK1_IO3_Pin|QSPI_BK1_IO2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Alternate = GPIO_AF9_QSPI;
+  HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : QSPI_BK1_IO0_Pin QSPI_BK1_IO1_Pin */
+  GPIO_InitStruct.Pin = QSPI_BK1_IO0_Pin|QSPI_BK1_IO1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Alternate = GPIO_AF10_OTG_FS;
+  HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
   /*Configure GPIO pin : DFSDM_CKOUT_Pin */
   GPIO_InitStruct.Pin = DFSDM_CKOUT_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -454,6 +432,14 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.Alternate = GPIO_AF8_DFSDM1;
   HAL_GPIO_Init(DFSDM_DATIN0_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : QSPI_CLK_Pin */
+  GPIO_InitStruct.Pin = QSPI_CLK_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Alternate = GPIO_AF9_QSPI;
+  HAL_GPIO_Init(QSPI_CLK_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : JOY_RIGHT_Pin JOY_LEFT_Pin */
   GPIO_InitStruct.Pin = JOY_RIGHT_Pin|JOY_LEFT_Pin;
@@ -488,6 +474,14 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : QSPI_BK1_NCS_Pin */
+  GPIO_InitStruct.Pin = QSPI_BK1_NCS_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Alternate = GPIO_AF10_OTG_FS;
+  HAL_GPIO_Init(QSPI_BK1_NCS_GPIO_Port, &GPIO_InitStruct);
+
   /*Configure GPIO pin : USB_OTGFS_PPWR_EN_Pin */
   GPIO_InitStruct.Pin = USB_OTGFS_PPWR_EN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
@@ -508,6 +502,14 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(uSD_DETECT_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : I2C1_SCL_Pin I2C1_SDA_Pin */
+  GPIO_InitStruct.Pin = I2C1_SCL_Pin|I2C1_SDA_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Alternate = GPIO_AF4_I2C1;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */

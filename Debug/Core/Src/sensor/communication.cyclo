@@ -1,3 +1,3 @@
 ../Core/Src/sensor/communication.c:12:5:is_sensor_connected	3
 ../Core/Src/sensor/communication.c:31:5:read_sensor_data	6
-../Core/Src/sensor/communication.c:62:5:sensor_data_to_temperatures	2
+../Core/Src/sensor/communication.c:64:5:sensor_data_to_temperatures	2

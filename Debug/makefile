@@ -70,8 +70,8 @@ all: main-build
 main-build: STM_Praktikum_D6T.elf secondary-outputs
 
 # Tool invocations
-STM_Praktikum_D6T.elf STM_Praktikum_D6T.map: $(OBJS) $(USER_OBJS) C:\src\repos\microcontroller\STM_Praktikum_D6T\STM32F412ZGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "STM_Praktikum_D6T.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\src\repos\microcontroller\STM_Praktikum_D6T\STM32F412ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM_Praktikum_D6T.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+STM_Praktikum_D6T.elf STM_Praktikum_D6T.map: $(OBJS) $(USER_OBJS) Z:\bsc\repos\microcontroller\STM_Praktikum_D6T\STM32F412ZGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "STM_Praktikum_D6T.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"Z:\bsc\repos\microcontroller\STM_Praktikum_D6T\STM32F412ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM_Praktikum_D6T.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
