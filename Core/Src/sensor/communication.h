@@ -17,7 +17,7 @@
 /// The D6T-32L-01A (that i was given measures in a 32x32 = 1024 pattern
 #define TEMP_VALUE_COUNT 1024
 #define ADDRESS (uint8_t)0x14
-#define CONNECTION_TRYS 10
+#define CONNECTION_TRYS 5
 
 
 int is_sensor_connected();
