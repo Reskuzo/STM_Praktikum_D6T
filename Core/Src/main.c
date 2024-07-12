@@ -23,7 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "sensor/dt6.h"
-
+#include "snake/snake.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -117,7 +117,7 @@ int main(void)
 	BSP_LED_Off(LED_GREEN);
 
 	if(BSP_JOY_GetState()==JOY_UP){
-#include "snake/snake.h"
+
 		snake2();
 	}
 

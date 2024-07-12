@@ -57,8 +57,10 @@ int generate_start_board(){
 }
 
 int render_board(){
+	HAL_IWDG_Refresh(&hiwdg);
 	BSP_LCD_Clear(LCD_COLOR_BLACK);
 	for (uint8_t row = 0; row < 16; row++){
+		HAL_IWDG_Refresh(&hiwdg);
 		for (uint8_t col = 0; col < 16; col++){
 			uint8_t cell = board[row*16+col];
 				if ( cell == 0) continue;
@@ -251,9 +253,13 @@ int snake(){
 uint8_t pause_indicator = 0;
 
 int snake2(){
+	BSP_LED_On(LED_GREEN);
+	HAL_IWDG_Refresh(&hiwdg);
+	BSP_LCD_Init();
 	generate_start_board();
 	render_board();
 		while(1){
+			HAL_IWDG_Refresh(&hiwdg);
 			BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
 			BSP_LCD_SetBackColor(LCD_COLOR_BLACK);
 			char out_str[5];
@@ -263,16 +269,19 @@ int snake2(){
 
 			uint32_t start = HAL_GetTick();
 	 		uint8_t input = get_controller_input();
+	 		HAL_IWDG_Refresh(&hiwdg);
 			while(HAL_GetTick() - start< 700 - rand()%300){
 				if (get_controller_input() != 5)
 					input = get_controller_input();
 			}
+			HAL_IWDG_Refresh(&hiwdg);
 			if (input == 4){
 				if (pause_indicator++ >= 2){
 					BSP_LCD_Clear(LCD_COLOR_BLACK);
 					BSP_LCD_SetBackColor(LCD_COLOR_BLACK);
 					BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
 					BSP_LCD_DisplayStringAt(0, 110, (uint8_t*)"Pause", CENTER_MODE);
+					HAL_IWDG_Refresh(&hiwdg);
 					while (input > 3) input = get_controller_input();
 					render_board();
 				} else
@@ -280,6 +289,7 @@ int snake2(){
 			}else {
 				pause_indicator = 0;
 			}
+			HAL_IWDG_Refresh(&hiwdg);
 			if(input == 5)
 				move_snake_renderned();
 			else {
