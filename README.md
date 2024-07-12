@@ -1,26 +1,38 @@
 # STM_Praktikum Sensor D6T-32L-01A
 /// overview
-## Principle of sensor operation
+## Funktionsweise der D6T MEMS Sensoren
+Abbildung 2: 
 ![Structure of the temperature sensor](./images/sensor_structure.png)
+Die einfallende Infrarot-Strahlung wird durch eine Silikon-Linse auf einen Thermophilsensor gebündelt und es wird die dabei resultierende Kraft gemessen. Durch den Vergleich mit einer internen Lookup-Tabelle wird die Temperatur des Infrarot-Strahlen emittierenden Objekts ermittelt. Diese Werte können dann über das $I^2C$ Protokoll ausgelesen werden.
+
+Der D6T-32L-01A ist in der Lage 32x32 Werte mit einer Messung zu erheben. Diese 1024 Themperaturwerte werden jeweils in ihre HIGH- und LOW-Bits zerlegt alszehnfacher Temperaturwert gespeichert und übermittelt. 
 
 ## Getting started
-The components used for this project are:
-* A D6T-32L-01A IR Sensor that was connected to 
-* A STM32F412G-Discovery board using  
-* A Qwiic to 4-male jumper pin cable.
-THough not required for the use of this application, the Data-sheets for the sensor and the controler can be found at [Datasheet D6T]() and [Datasheet STM32]() respectively.
+Für die Durchführung wurde folgendes Setup verwendet :
+* Ein D6T-32L-01A IR Sensor, der mit 
+* einem STM32F412G-Discovery board mit  
+* einem Qwiic zu 4-male jumper pin kabel verbunden ist.
 
-### Wireing
-On the side of the sensor apart from pushing the cable in the box below the board untill a click can be heared no wireing is needed. 
-At the evaluation board the external I2C port can be found as a black box with eight square holes on the far right edge of the board next to the micro usb connector that is used to connect the board to the computer or power source. To see which cable from the sensor matches wich which pin on the sensor follow the graphic below:
-![Pin connection between sensor and Controller](file:./images/hardware_pinout)
+Für weitere Informationen zu dem Sensor und MikroController(kurz µC) verweise ich auf die jeweiligen Datenblätter:
+* [Datenblatt D6T](https://cdn-reichelt.de/documents/datenblatt/B400/D6T_MANUAL-ENPDF.pdf) 
+* [Datenblatt STM32](https://www.st.com/en/evaluation-tools/32f412gdiscovery.html#documentation)
+### Verkabelung
+Abbildung 3:
+![Skizze der Verkabelung](./images/mikrooc_scetch.png)
+Die Kommunikation zwischen µC und D6T findet über das $I^2C$ Protokoll statt. Der $I^2C$ Port befindet sich auf der dem LCD-Display abgewandten kurzen Seite des µC, unterhalb des USB Connectors, der für die Stromzufuhr und Programmierung des µC verwendet wird. Der $I^2C$ Port des D6T dagegen, kann an der unterseite in Form eines Qwiic anschluss gefunden werden. Die Farben der in der Abbildung verwendeten Kabel haben die Folgende Bedeutung:
+* Gelb:    SCL ($I^2C$ Clock)
+* Blau:    SDA ($I^2C$ Datenleitung)
+* Rot:     VCC (Stromzufuhr)
+* Schwarz: GND (Ground)
 
-### Loading the software to the evaluation board
-For this project, I used the under the XY License published free to use software STMCubeIDE. Within this software you can write the software of an opened project onto a evaluation board that is connected with usb by pressing the play button on the top middle of the Screen. At the first time the IDE will ask you about saving before running which you can accept. THe software will be written to to your board and executed immediatly. 
 
-### Resetting the software
-1. Restart Sensor by pulling ground cable and repluging it in
-2. Press reset button (img)
+### Sofftware auf dem µC installieren
+. Within this software you can write the software of an opened project onto a evaluation board that is connected with usb by pressing the play button on the top middle of the Screen. At the first time the IDE will ask you about saving before running which you can accept. THe software will be written to to your board and executed immediatly. 
+
+### Software zurücksetzen
+0. Für das zurücksetzen der Software im Falle eines Fehlers ist bereits ein Watchdog Timer implementiert, der etwa alle vier Sekunden Das Programm zurücksetzt, sollte dies nicht mehr reagieren. Sollte dennoch das Programm nicht Funktionieren können folgende Schritte versucht werden:
+1. Das Neu-Starten des Sensors erfolgt, in dem entweder die VCC, oder GND Leitung getrennt und neu verbunden werden
+2. Das Auf den Sensor gespielte Programm lässt sich manuell neu starten, indem der Restart Knopf (Siehe Abbildung 3) gedrückt wird.
 
 
 ## Software Architecture and Design decisions
@@ -32,9 +44,7 @@ The presentated software to read the sensor data has been moved to a Folder call
 
 ## Authors
 Yannick Pahlke 1841500 (@Reskuzo on Github)
-# Todo
-* Watchdog timer
-* Interrupts to fasten up
-* option to switch between sensor models (not able to test though)
-* Regelung/Glättung der Daten
-  
+
+
+
+
