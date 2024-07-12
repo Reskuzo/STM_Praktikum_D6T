@@ -54,7 +54,9 @@ int read_sensor_data(uint8_t* readbuffer){
 
 		  /// if everything was successful, end the function else wait and try again
 		  if (status == HAL_OK && !(readbuffer[5] == 0xff && readbuffer[6] == 0xff)) break;
+		  BSP_LED_On(LED_RED);
 		  HAL_Delay(550);
+		  BSP_LED_Off(LED_RED);
 	  } while(1);
 	  return SUCCESS;
   };

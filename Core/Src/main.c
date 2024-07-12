@@ -118,10 +118,11 @@ int main(void)
 
 	while(BSP_JOY_GetState()==JOY_UP){
 		snake2();
+		BSP_LED_Off(LED_GREEN);
 		HAL_IWDG_Refresh(&hiwdg);
 		HAL_Delay(1000);
 	}
-
+	BSP_LED_On(LED_ORANGE);
   d6t_reading_to_lcd(&hi2c2);
   /* USER CODE END 2 */
 
