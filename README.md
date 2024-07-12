@@ -1,5 +1,18 @@
 # STM_Praktikum Sensor D6T-32L-01A
-/// overview
+Dieses Projekt bezieht sich auf den Kurs Mikrocontroller an der Unversität Bayreuth. Ziel des Kurses ist es Daten eines Sensors, in diesem Fall eines Infrarotsensors, mithilfe eines Entwicklungsboards auszulesen und auf dem Board, oder dem verbuundenen Bildschirm wiederzugeben.
+
+Für dieses Projekt war der Infrarotsensor D6T-32L-01A gegeben, der 32x32 Temperaturwerte einer Rechteckigen Fläche erfasst:
+![Erfassungsbereich des Sensors](./images/sensor_coverage.png)
+
+Auf diese Temperaturwerte kann über das $I^2C$ Protokoll zugegriffen werden. Das $I^2C$ überträgt Daten in digitaler Form, über zwei Leitungen, Dabei wird eine als Pulsgeber (Clock) und die andere als Datenleitung genutzt. Die kommunikation mittels $I^2C$ erfolgt bidirektional nach dem Master-Slave prinzip, wobei der Mikrocontroller den master und der Sensor den Slave darstellt und hat immer folgenden Aufbau:
+ 1. Startbedingung: Die Kommunikation beginnt mit einer Startbedingung (eine Änderung des SDA (Serial Data Line) von HIGH auf LOW).
+2. Adressierung: Der Master sendet die Adresse des Slave, für den D6T ist das `0x14`, zusammen mit einem Bit, das angibt, ob es sich eine Lese- oder Schreiboperation handelt.
+3. Datenübertragung: Der Slave sendet eine Bestätigung und die Datenübertragung beginnt.
+4. Stopbedingung: Die Kommunikation endet mit einer Stopbedingung, die vom Master gesendet wird (Änderung des SDA von LOW auf HIGH).
+
+Da das $I^2C$ Protokoll lediglich 8-bit Daten unterstützt, müssen die 16-bit Temperaturwerte in HIGH- und LOW- Bits übertragen werden. Diese werden dann auf dem µC wieder zu einem 16Bit temperaturwert zusammengesetzt. Diese Werte beschreiben in diesem Fall die 10-Fache Temperatur. 
+
+Die Ausgabe der Sensorwerte erfolgt etwa alle zwei Sekunden auf dem Display des Entwicklungsboards in Form eines farbigen Bildes. Dabei werden die Temperaturwerte auf einer Farbskala abgebildet. Für diese Farbscala sind zwei 
 ## Funktionsweise der D6T MEMS Sensoren
 Abbildung 2: 
 ![Structure of the temperature sensor](./images/sensor_structure.png)
@@ -10,8 +23,9 @@ Der D6T-32L-01A ist in der Lage 32x32 Werte mit einer Messung zu erheben. Diese 
 ## Getting started
 Für die Durchführung wurde folgendes Setup verwendet :
 * Ein D6T-32L-01A IR Sensor, der mit 
-* einem STM32F412G-Discovery board mit  
+* einem STM32F412G-Discovery board (hier mit µC abgekürzt) mit  
 * einem Qwiic zu 4-male jumper pin kabel verbunden ist.
+* ein Mikro-USB Datenkabel zur Stromversorgung und zum Programmieren des µC wird ebenfalls benötigt.
 
 Für weitere Informationen zu dem Sensor und MikroController(kurz µC) verweise ich auf die jeweiligen Datenblätter:
 * [Datenblatt D6T](https://cdn-reichelt.de/documents/datenblatt/B400/D6T_MANUAL-ENPDF.pdf) 
@@ -27,7 +41,7 @@ Die Kommunikation zwischen µC und D6T findet über das $I^2C$ Protokoll statt. 
 
 
 ### Sofftware auf dem µC installieren
-. Within this software you can write the software of an opened project onto a evaluation board that is connected with usb by pressing the play button on the top middle of the Screen. At the first time the IDE will ask you about saving before running which you can accept. THe software will be written to to your board and executed immediatly. 
+Für dieses Projekt wurde die frei zum Download verfügbare Software STM32CubeIDE verwendet. Mithilfe dieser Software kann das Projekt auch auf den Mikrocontroller gespielt werden. Dazu muss das geklonte Archiv als Projekt geöffnet werden, der µC durch ein Daten-Kabel mit dem Computer verbunden, und der grüne Play-button am oberen Rand der Oberfläche gedrückt werden. 
 
 ### Software zurücksetzen
 0. Für das zurücksetzen der Software im Falle eines Fehlers ist bereits ein Watchdog Timer implementiert, der etwa alle vier Sekunden Das Programm zurücksetzt, sollte dies nicht mehr reagieren. Sollte dennoch das Programm nicht Funktionieren können folgende Schritte versucht werden:
@@ -42,9 +56,10 @@ The presentated software to read the sensor data has been moved to a Folder call
 
 
 
-## Authors
+## Autor
 Yannick Pahlke 1841500 (@Reskuzo on Github)
 
 
 
+## Quellen
 
