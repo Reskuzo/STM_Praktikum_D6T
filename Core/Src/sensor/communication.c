@@ -42,22 +42,22 @@ int read_sensor_data(uint8_t* readbuffer){
 
 	  int fails = 0;
 	  do {
+		  HAL_Delay(300);
 		  /// send command for preparing transmission
-		  status = HAL_I2C_Master_Transmit(&hi2c2, 0x14, &cmd, 1, 100);
-		  HAL_Delay(10);
-
+		  status = HAL_I2C_Master_Transmit(&hi2c2, 0x14, &cmd, 2, 300);
+		  HAL_Delay(30);
 		  /// if the connection failed more than 10 times in a row, return connection lost
 		  if (status != HAL_OK && fails++ > CONNECTION_TRYS) return NO_CONNECTION;
-
 		  /// receive the data from Sensor at port 0x14
 		  status = HAL_I2C_Master_Receive(&hi2c2, 0x14, readbuffer, size, HAL_MAX_DELAY);
 
 		  /// if everything was successful, end the function else wait and try again
-		  if (status == HAL_OK && !(readbuffer[5] == 0xff && readbuffer[6] == 0xff)) break;
+		  if (status == HAL_OK && !(readbuffer[500] == 0xff && readbuffer[501] == 0xff) & !(readbuffer[500] == 0x00 && readbuffer[501] == 0x00)) break;
 		  BSP_LED_On(LED_RED);
 		  HAL_Delay(550);
 		  BSP_LED_Off(LED_RED);
 	  } while(1);
+	  //BSP_LED_Toggle(LED_BLUE);
 	  return SUCCESS;
   };
 
