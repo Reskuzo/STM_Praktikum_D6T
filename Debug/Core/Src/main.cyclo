@@ -7,10 +7,10 @@
 ../Core/Src/snake/snake.h:151:5:move_snake_renderned	19
 ../Core/Src/snake/snake.h:217:9:get_controller_input	6
 ../Core/Src/snake/snake.h:226:5:snake	5
-../Core/Src/snake/snake.h:255:5:snake2	7
+../Core/Src/snake/snake.h:255:5:snake2	9
 ../Core/Src/main.c:83:5:main	2
-../Core/Src/main.c:143:6:SystemClock_Config	3
-../Core/Src/main.c:195:13:MX_I2C2_Init	2
-../Core/Src/main.c:229:13:MX_IWDG_Init	2
-../Core/Src/main.c:258:13:MX_GPIO_Init	1
-../Core/Src/main.c:436:6:Error_Handler	1
+../Core/Src/main.c:144:6:SystemClock_Config	3
+../Core/Src/main.c:196:13:MX_I2C2_Init	2
+../Core/Src/main.c:230:13:MX_IWDG_Init	2
+../Core/Src/main.c:259:13:MX_GPIO_Init	1
+../Core/Src/main.c:437:6:Error_Handler	1

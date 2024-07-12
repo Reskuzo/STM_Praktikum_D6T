@@ -202,7 +202,7 @@ int move_snake_renderned(){
 		}
 		default:
 			you_dieded_lol();
-			break;
+			return 0;
 		}
 		board[head_pos()] = 2;
 
@@ -290,11 +290,12 @@ int snake2(){
 				pause_indicator = 0;
 			}
 			HAL_IWDG_Refresh(&hiwdg);
-			if(input == 5)
-				move_snake_renderned();
+			if(input == 5){
+				if (!move_snake_renderned()) return 0;
+			}
 			else {
 				head_rot = input;
-				move_snake_renderned();
+				if (!move_snake_renderned()) return 0;
 			}
 		}
 		return 1;
