@@ -1,29 +1,34 @@
 # STM_Praktikum Sensor D6T-32L-01A
 Dieses Projekt bezieht sich auf den Kurs Mikrocontroller an der Unversität Bayreuth. Ziel des Kurses ist es Daten eines Sensors, in diesem Fall eines Infrarotsensors, mithilfe eines Entwicklungsboards auszulesen und auf dem Board, oder dem verbuundenen Bildschirm wiederzugeben.
 
+
+
+Die Ausgabe der Sensorwerte erfolgt etwa alle zwei Sekunden auf dem Display des Entwicklungsboards in Form eines farbigen Bildes. Dabei werden die Temperaturwerte auf einer Farbskala, von Hoch (rot) zu niedrig (blau) über normal (weiß) abgebildet. Für diese Farbscala sind **zwei Modi** verfügbar, zwischen denen durch **halten des Joysticks bis zur nächsten Messung** nach rechts für den relativen Modus (REF), oder nach links (standart) für den absoluten Modus(ABS). 
+
+Im **Absoluten Modus** bildet die Tiefsttemperatur des Sensors laut Datenblatt (10°C) den unteren Rand der Skala und die Höchsttemperatur (70°C) den Oberen. Dazwischen sind noch die die Temperaturn Raumtemperatur (24°) in weiß und Körertemperatur 36° in Orange festgesetzt, um einen stärkeren Ausschlag im Alltäglichen Temperaturbereich zu erziehlen. 
+![absolute Farbskala](./images/color_schema.png)
+
+Im **relativen Modus** dagegen wird die tiefste gemessene Temperatur auf Blau gesetzt und die höchste gemessene Temperatur auf Rot. Die Durchschnittstemperatur wird auf Weiß festgelegtund orange bildet den Durchschnitt + 2,5°C ab. Dadurch können Objekte unabhängig von der Umgebungstemperatur sehr gut erkannt werden. 
+
+## Funktionsweise der D6T MEMS Sensoren
 Für dieses Projekt war der Infrarotsensor D6T-32L-01A gegeben, der 32x32 Temperaturwerte einer Rechteckigen Fläche erfasst:
 ![Erfassungsbereich des Sensors](./images/sensor_coverage.png)
 
 Auf diese Temperaturwerte kann über das $I^2C$ Protokoll zugegriffen werden. Das $I^2C$ überträgt Daten in digitaler Form, über zwei Leitungen, Dabei wird eine als Pulsgeber (Clock) und die andere als Datenleitung genutzt. Die kommunikation mittels $I^2C$ erfolgt bidirektional nach dem Master-Slave prinzip, wobei der Mikrocontroller den master und der Sensor den Slave darstellt und hat immer folgenden Aufbau:
- 1. Startbedingung: Die Kommunikation beginnt mit einer Startbedingung (eine Änderung des SDA (Serial Data Line) von HIGH auf LOW).
+![I2C Protokollablauf bei der Kommunikation mit dem Sensor](./images/signal_chart.png)
+ 1. Startbedingung S: Die Kommunikation beginnt mit einer Startbedingung (eine Änderung des SDA (Serial Data Line) von HIGH auf LOW).
 2. Adressierung: Der Master sendet die Adresse des Slave, für den D6T ist das `0x14`, zusammen mit einem Bit, das angibt, ob es sich eine Lese- oder Schreiboperation handelt.
 3. Datenübertragung: Der Slave sendet eine Bestätigung und die Datenübertragung beginnt.
 4. Stopbedingung: Die Kommunikation endet mit einer Stopbedingung, die vom Master gesendet wird (Änderung des SDA von LOW auf HIGH).
+* Jede Kommunikation auf der Datenleitung wird in jedem Schritt von der anderen Seite Acknolaged (ACK)
 
 Da das $I^2C$ Protokoll lediglich 8-bit Daten unterstützt, müssen die 16-bit Temperaturwerte in HIGH- und LOW- Bits übertragen werden. Diese werden dann auf dem µC wieder zu einem 16Bit temperaturwert zusammengesetzt. Diese Werte beschreiben in diesem Fall die 10-Fache Temperatur. 
 
-Die Ausgabe der Sensorwerte erfolgt etwa alle zwei Sekunden auf dem Display des Entwicklungsboards in Form eines farbigen Bildes. Dabei werden die Temperaturwerte auf einer Farbskala, von Hoch (rot) zu niedrig (blau) über normal (weiß) abgebildet. Für diese Farbscala sind zwei Modi verfügbar, zwischen denen durch halten des Joysticks bis zur nächsten Messung nach rechts für den relativen Modus (REF), oder nach links (standart) für den absoluten Modus(ABS). 
+Diese Themperatur wird im Sensor durch das Folgende Setup gemessen: 
 
-Im Absoluten Modus bildet die Tiefsttemperatur des Sensors laut Datenblatt (10°C) den unteren Rand der Skala und die Höchsttemperatur (70°C) den Oberen. Dazwischen sind noch die die Temperaturn Raumtemperatur (24°) in weiß und Körertemperatur 36° in Orange festgesetzt, um einen stärkeren Ausschlag im Alltäglichen Temperaturbereich zu erziehlen. 
-![absolute Farbskala](./images/color_schema.png)
-
-Im relativen Modus dagegen wird die tiefste gemessene Temperatur auf Blau gesetzt und die höchste gemessene Temperatur auf Rot. Die Durchschnittstemperatur wird auf Weiß festgelegtund orange bildet den Durchschnitt + 2,5°C ab. Dadurch können Objekte unabhängig von der Umgebungstemperatur sehr gut erkannt werden. 
-## Funktionsweise der D6T MEMS Sensoren
 Abbildung 2: 
 ![Structure of the temperature sensor](./images/sensor_structure.png)
 Die einfallende Infrarot-Strahlung wird durch eine Silikon-Linse auf einen Thermophilsensor gebündelt und es wird die dabei resultierende Kraft gemessen. Durch den Vergleich mit einer internen Lookup-Tabelle wird die Temperatur des Infrarot-Strahlen emittierenden Objekts ermittelt. Diese Werte können dann über das $I^2C$ Protokoll ausgelesen werden.
-
-Der D6T-32L-01A ist in der Lage 32x32 Werte mit einer Messung zu erheben. Diese 1024 Themperaturwerte werden jeweils in ihre HIGH- und LOW-Bits zerlegt alszehnfacher Temperaturwert gespeichert und übermittelt. 
 
 ## Getting started
 Für die Durchführung wurde folgendes Setup verwendet :
