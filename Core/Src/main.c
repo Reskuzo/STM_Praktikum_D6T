@@ -111,6 +111,15 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
   BSP_JOY_Init(JOY_MODE_GPIO);
+  BSP_LED_Off(LED_BLUE);
+	BSP_LED_Off(LED_RED);
+	BSP_LED_Off(LED_ORANGE);
+	BSP_LED_Off(LED_GREEN);
+
+	if(BSP_JOY_GetState()==JOY_UP){
+#include "snake/snake.h"
+		snake2();
+	}
 
   d6t_reading_to_lcd(&hi2c2);
   /* USER CODE END 2 */
