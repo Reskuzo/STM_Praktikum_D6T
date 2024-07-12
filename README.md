@@ -12,7 +12,12 @@ Auf diese Temperaturwerte kann über das $I^2C$ Protokoll zugegriffen werden. Da
 
 Da das $I^2C$ Protokoll lediglich 8-bit Daten unterstützt, müssen die 16-bit Temperaturwerte in HIGH- und LOW- Bits übertragen werden. Diese werden dann auf dem µC wieder zu einem 16Bit temperaturwert zusammengesetzt. Diese Werte beschreiben in diesem Fall die 10-Fache Temperatur. 
 
-Die Ausgabe der Sensorwerte erfolgt etwa alle zwei Sekunden auf dem Display des Entwicklungsboards in Form eines farbigen Bildes. Dabei werden die Temperaturwerte auf einer Farbskala abgebildet. Für diese Farbscala sind zwei 
+Die Ausgabe der Sensorwerte erfolgt etwa alle zwei Sekunden auf dem Display des Entwicklungsboards in Form eines farbigen Bildes. Dabei werden die Temperaturwerte auf einer Farbskala, von Hoch (rot) zu niedrig (blau) über normal (weiß) abgebildet. Für diese Farbscala sind zwei Modi verfügbar, zwischen denen durch halten des Joysticks bis zur nächsten Messung nach rechts für den relativen Modus (REF), oder nach links (standart) für den absoluten Modus(ABS). 
+
+Im Absoluten Modus bildet die Tiefsttemperatur des Sensors laut Datenblatt (10°C) den unteren Rand der Skala und die Höchsttemperatur (70°C) den Oberen. Dazwischen sind noch die die Temperaturn Raumtemperatur (24°) in weiß und Körertemperatur 36° in Orange festgesetzt, um einen stärkeren Ausschlag im Alltäglichen Temperaturbereich zu erziehlen. 
+![absolute Farbskala](./images/color_schema.png)
+
+Im relativen Modus dagegen wird die tiefste gemessene Temperatur auf Blau gesetzt und die höchste gemessene Temperatur auf Rot. Die Durchschnittstemperatur wird auf Weiß festgelegtund orange bildet den Durchschnitt + 2,5°C ab. Dadurch können Objekte unabhängig von der Umgebungstemperatur sehr gut erkannt werden. 
 ## Funktionsweise der D6T MEMS Sensoren
 Abbildung 2: 
 ![Structure of the temperature sensor](./images/sensor_structure.png)
@@ -44,7 +49,7 @@ Die Kommunikation zwischen µC und D6T findet über das $I^2C$ Protokoll statt. 
 Für dieses Projekt wurde die frei zum Download verfügbare Software STM32CubeIDE verwendet. Mithilfe dieser Software kann das Projekt auch auf den Mikrocontroller gespielt werden. Dazu muss das geklonte Archiv als Projekt geöffnet werden, der µC durch ein Daten-Kabel mit dem Computer verbunden, und der grüne Play-button am oberen Rand der Oberfläche gedrückt werden. 
 
 ### Software zurücksetzen
-0. Für das zurücksetzen der Software im Falle eines Fehlers ist bereits ein Watchdog Timer implementiert, der etwa alle vier Sekunden Das Programm zurücksetzt, sollte dies nicht mehr reagieren. Sollte dennoch das Programm nicht Funktionieren können folgende Schritte versucht werden:
+0. Das programm beinhaltet bereits einen Watchdog Timer, der etwa alle vier Sekunden das Programm zurücksetzt, sollte dies nicht mehr reagieren. Sollte dennoch das Programm nicht Funktionieren können folgende Schritte versucht werden:
 1. Das Neu-Starten des Sensors erfolgt, in dem entweder die VCC, oder GND Leitung getrennt und neu verbunden werden
 2. Das Auf den Sensor gespielte Programm lässt sich manuell neu starten, indem der Restart Knopf (Siehe Abbildung 3) gedrückt wird.
 
