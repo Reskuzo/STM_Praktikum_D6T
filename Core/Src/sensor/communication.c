@@ -32,7 +32,6 @@ int read_sensor_data(uint8_t* readbuffer){
 	 /// Each temperature reading consists of 2 8-Bit value (LOW-/HIGH-bit)
 	 /// Additionally one PTAT reading and one Checksuum value is transmitted
 	 int size = TEMP_VALUE_COUNT * 2 + 3;
-
 	 /// Command for telling the sensor we want to read data
 	 uint8_t cmd = 0x4c;
 
@@ -64,9 +63,19 @@ int read_sensor_data(uint8_t* readbuffer){
 int sensor_data_to_temperatures(uint8_t* sensor_data, int* temperatures){
 	/// each reading consists of a high reading and a low reading,
 	/// with high reading * 256 (max value 4 Bit) + low bits = temperature * 10
+	   int sum = 0, highest=-10, lowest = 80;
 	   for (int temp_index = 0; temp_index/2 < TEMP_VALUE_COUNT + 1; temp_index+=2){
-	 	  temperatures[temp_index/2] = sensor_data[temp_index+1] * 256 + sensor_data[temp_index];
+		  int temp = sensor_data[temp_index+1] * 256 + sensor_data[temp_index];
+	 	  temperatures[temp_index/2+3] = temp;
+	 	  sum += temp;
+	 	  if(temp > highest)
+	 		  highest = temp;
+	 	  else if (temp < lowest)
+	 		  lowest = temp;
 	   }
+	   temperatures[2] = (int) (sum / TEMP_VALUE_COUNT);
+	   temperatures[0] = highest;
+	   temperatures[1] = lowest;
 	   return SUCCESS;
 };
 

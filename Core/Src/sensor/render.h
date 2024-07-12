@@ -17,10 +17,17 @@
 #define ROOM_TEMP 26.f
 #define BODY_TEMP 36.f
 
+
+
 uint16_t pick_gradient_color(uint16_t color1, uint16_t color2, float temperature_gradient);
 
+uint16_t convert_temp_to_color_spec(float temp, float HIGH, float LOW, float ROOM, float HIGHLIGHT) ;
 uint16_t convert_temp_to_color(float temp) ;
+void display_data_on_lcd_rel_mode(int* temperatures);
+
 
 void display_data_on_lcd(int* temperatures);
+
+
 
 #endif /* SRC_SENSOR_RENDER_H_ */
