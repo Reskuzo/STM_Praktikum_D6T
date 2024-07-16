@@ -22,25 +22,9 @@ Abbildung :
 ![Bild von Hand über Sensor](./images/handywork..png)
  In der Abbildung ist oben links das Setup mit Board und Sensor, darunter die Durchführung und rechts danneben die ergebnisse eines Durchlaufs zu sehen, bei dem ich meine Hand über den Sensor gehalten habe. Dabei zeigt das obere rechte Bild das Ergebnis im absoluten, das Untere die Temperatur im relativen Modus. Wie man erkennen kann ist der Kontrast im relativen Modus höher als im absoluten. 
 
-## Funktionsweise der D6T MEMS Sensoren
-Für dieses Projekt war der Infrarotsensor D6T-32L-01A gegeben, der 32x32 Temperaturwerte einer Rechteckigen Fläche erfasst:
-![Erfassungsbereich des Sensors](./images/sensor_coverage.png)
+ Als Anwendung des Sensors schlägt das Datenblatt das Erkennen von Menschen vor. Für das erkennen selbst gibt es meinerseits zwar keine Implementation einer automatischen Erkennung, dennoch halte ich dieses Szenario für ein gutes Beispiel, um die Auflösung des Sensors zu verdeutlichen. Im Folgenden Bild Ist zum Einen die Abbildung aus dem Datenblatt und darunter meine Messungen, bei denen ich jeweils 1m, 2m, bzw. 3m vom Sensor entfernt stehe. Dabei ist anzumerken, dass bereits auf dem zweiten Bild eine Erkennung durch Software unewahrscheinlich ist.
+ ![Menschen erkennen](./images/human_detection.png)
 
-Auf diese Temperaturwerte kann über das $I^2C$ Protokoll zugegriffen werden. Das $I^2C$ überträgt Daten in digitaler Form, über zwei Leitungen, Dabei wird eine als Pulsgeber (Clock) und die andere als Datenleitung genutzt. Die kommunikation mittels $I^2C$ erfolgt bidirektional nach dem Master-Slave prinzip, wobei der Mikrocontroller den master und der Sensor den Slave darstellt und hat immer folgenden Aufbau:
-![I2C Protokollablauf bei der Kommunikation mit dem Sensor](./images/signal_chart.png)
- 1. Startbedingung S: Die Kommunikation beginnt mit einer Startbedingung (eine Änderung des SDA (Serial Data Line) von HIGH auf LOW).
-2. Adressierung: Der Master sendet die Adresse des Slave, für den D6T ist das `0x14`, zusammen mit einem Bit, das angibt, ob es sich eine Lese- oder Schreiboperation handelt.
-3. Datenübertragung: Der Slave sendet eine Bestätigung und die Datenübertragung beginnt.
-4. Stopbedingung: Die Kommunikation endet mit einer Stopbedingung, die vom Master gesendet wird (Änderung des SDA von LOW auf HIGH).
-* Jede Kommunikation auf der Datenleitung wird in jedem Schritt von der anderen Seite Acknolaged (ACK)
-
-Da das $I^2C$ Protokoll lediglich 8-bit Daten unterstützt, müssen die 16-bit Temperaturwerte in HIGH- und LOW- Bits übertragen werden. Diese werden dann auf dem µC wieder zu einem 16Bit temperaturwert zusammengesetzt. Diese Werte beschreiben in diesem Fall die 10-Fache Temperatur. 
-
-Diese Themperatur wird im Sensor durch das Folgende Setup gemessen: 
-
-Abbildung 2: 
-![Structure of the temperature sensor](./images/sensor_structure.png)
-Die einfallende Infrarot-Strahlung wird durch eine Silikon-Linse auf einen Thermophilsensor gebündelt und es wird die dabei resultierende Kraft gemessen. Durch den Vergleich mit einer internen Lookup-Tabelle wird die Temperatur des Infrarot-Strahlen emittierenden Objekts ermittelt. Diese Werte können dann über das $I^2C$ Protokoll ausgelesen werden.
 
 ## Getting started
 Für die Durchführung wurde folgendes Setup verwendet :
@@ -70,13 +54,37 @@ Für dieses Projekt wurde die frei zum Download verfügbare Software STM32CubeID
 1. Das Neu-Starten des Sensors erfolgt, in dem entweder die VCC, oder GND Leitung getrennt und neu verbunden werden
 2. Das Auf den Sensor gespielte Programm lässt sich manuell neu starten, indem der Restart Knopf (Siehe Abbildung 3) gedrückt wird.
 
+## Funktionsweise der D6T MEMS Sensoren
+Für dieses Projekt war der Infrarotsensor D6T-32L-01A gegeben, der 32x32 Temperaturwerte einer Rechteckigen Fläche erfasst:
+![Erfassungsbereich des Sensors](./images/sensor_coverage.png)
 
-## Software Architecture and Design decisions
-The presentated software to read the sensor data has been moved to a Folder called `/Core/.../sensor/` to enable the construction of different logically seperated components. This folder has an access point for the main method called `d6t.h` in which the main streamline of the constructed methods were executed. These method have been seperated into two files:
-1. `.../sensor/communication.h/c` in the communication files the methods focus on getting the raw data from the sensor and interpret it in a way that it fits to a for Humans readable value in °C. Even thoug the task requests iso units, I chose not to comply as the stepsize between Kelvin and Celsius are identical and a calculation to Kelvin would only take more space on the small Display as the numbers are 272.15 bigger that Celsius's system. I decided the conversion is easy enough that it is not worth the extra space.
-2. `.../sensor/render.h/c` contains the code used to visualize the data we got from the sensor on the evaluation board screen. ... /// how and why like this
+Auf diese Temperaturwerte kann über das $I^2C$ Protokoll zugegriffen werden. Das $I^2C$ überträgt Daten in digitaler Form, über zwei Leitungen, Dabei wird eine als Pulsgeber (Clock) und die andere als Datenleitung genutzt. Die kommunikation mittels $I^2C$ erfolgt bidirektional nach dem Master-Slave prinzip, wobei der Mikrocontroller den master und der Sensor den Slave darstellt und hat immer folgenden Aufbau:
+![I2C Protokollablauf bei der Kommunikation mit dem Sensor](./images/signal_chart.png)
+ 1. Startbedingung S: Die Kommunikation beginnt mit einer Startbedingung (eine Änderung des SDA (Serial Data Line) von HIGH auf LOW).
+2. Adressierung: Der Master sendet die Adresse des Slave, für den D6T ist das `0x14`, zusammen mit einem Bit, das angibt, ob es sich eine Lese- oder Schreiboperation handelt.
+3. Datenübertragung: Der Slave sendet eine Bestätigung und die Datenübertragung beginnt.
+4. Stopbedingung: Die Kommunikation endet mit einer Stopbedingung, die vom Master gesendet wird (Änderung des SDA von LOW auf HIGH).
+* Jede Kommunikation auf der Datenleitung wird in jedem Schritt von der anderen Seite Acknolaged (ACK)
+
+Da das $I^2C$ Protokoll lediglich 8-bit Daten unterstützt, müssen die 16-bit Temperaturwerte in HIGH- und LOW- Bits übertragen werden. Diese werden dann auf dem µC wieder zu einem 16Bit temperaturwert zusammengesetzt. Diese Werte beschreiben in diesem Fall die 10-Fache Temperatur. 
+
+Dabei werden die Themperaturwerte im Sensor durch das Folgende Setup gemessen: 
+
+Abbildung 2: 
+![Structure of the temperature sensor](./images/sensor_structure.png)
+Die einfallende Infrarot-Strahlung wird durch eine Silikon-Linse auf einen Thermophilsensor gebündelt und es wird die dabei resultierende Kraft gemessen. Durch den Vergleich mit einer internen Lookup-Tabelle wird die Temperatur des Infrarot-Strahlen emittierenden Objekts ermittelt. Diese Werte können dann über das $I^2C$ Protokoll ausgelesen werden.
 
 
+
+### Fehlerabschätzung 
+Die Fehlerabschätzung habe ich anhand einer Messung der Handwärme mit Haushaltsmitteln durchgeführt. Dafür habe ich sowohl den Sensor, als auch ein Dorotherm®️ Termometer vollkommen in meiner Linken Hand umschlossen und die Temperaturwerte verglichen. Das Termometer hat Werte von $36,78\pm 0,18$°C (6 Messungen) gemessen, wohingegen der Sensor $37, 78\pm 0,62$°C (6 Messungen über 6 Sekunden) gemessen hat. Damit ist eine Abweichung von etwa 1 bis 1,5°C zu erwarten.
+
+
+## Software Architektur und Design entscheidungen
+In den Vorherigen Kapiteln wurde auf die Zusammensetzung und Verwendung des sensors in Verbindung mit demProgramm eingegangen. Dieses Kapitel dagegegen soll einen Überblick über die Struktur des Program,mcodes geben. Das Programm selbst von dem hier die Rede ist, lässt sich in dem Ordner `/Core/Src/sensor` wiederfinden, wobei als einstiegspunkt die Methode `d6t.h/d6t_reading_to_lcd` aufgerufen wird. In dieser Methode wird die 
+
+### Easter Egg: Snake
+Wenn man einen Blick in den Programmcode wirft, fällt auf, dass neben dem eigentlichen sensor ordner ein weiterer Ordner mit der Aufschrift snake im Projektverzeichnis liegt. Dieser Ordner enthält den Programmcode, um das spiel Snake auf dem Mikrocontroller zu spielen. Dieses Spiel habe ich in der Zeit zwischen der Ausgabe der Mikrocontroller und der Ausgabe der Sensoren als ein erstes Hello World!-Programm entwickelt. Auch wenn ich das Spiel eigentlich nur zu Lernzwecken erstellt habe, entschied ich mich dennoch es meinder Abgabe beizufügen, da ich es in der genannten Zeit fertiggestellt hatte und die Einbindung mit wenig Aufwand verbunden war. Das Starten des Spiels auf dem Entwickungsboard ist nur zum Programmstart/Programmreset durch das Halten des Blauen Joysticks nach oben möglich. Sobald man sein Spiel beendet hat, startet das Programm zum Auslesen des Sensors.
 
 ## Autor
 Yannick Pahlke 1841500 (@Reskuzo on Github)
@@ -84,4 +92,11 @@ Yannick Pahlke 1841500 (@Reskuzo on Github)
 
 
 ## Quellen
+[HAL Dokumentation](https://www.st.com/resource/en/user_manual/um1725-description-of-stm32f4-hal-and-lowlayer-drivers-stmicroelectronics.pdf)\
+[Datenblatt Entwicklungsboard](https://www.st.com/resource/en/user_manual/um2032-discovery-kit-with-stm32f412zg-mcu-stmicroelectronics.pdf)
+
+Datenblätter Sensor: 
+* [Datenblatt D6T EN](https://cdn-reichelt.de/documents/datenblatt/B400/D6T_DB-EN.pdf)
+* [Datenblatt D6T](https://cdn-reichelt.de/documents/datenblatt/B400/D6T_DB-EN.pdf)
+
 
