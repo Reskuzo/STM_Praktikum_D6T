@@ -8,7 +8,19 @@ Die Ausgabe der Sensorwerte erfolgt etwa alle zwei Sekunden auf dem Display des 
 Im **Absoluten Modus** bildet die Tiefsttemperatur des Sensors laut Datenblatt (10°C) den unteren Rand der Skala und die Höchsttemperatur (70°C) den Oberen. Dazwischen sind noch die die Temperaturn Raumtemperatur (24°) in weiß und Körertemperatur 36° in Orange festgesetzt, um einen stärkeren Ausschlag im Alltäglichen Temperaturbereich zu erziehlen. 
 ![absolute Farbskala](./images/color_schema.png)
 
-Im **relativen Modus** dagegen wird die tiefste gemessene Temperatur auf Blau gesetzt und die höchste gemessene Temperatur auf Rot. Die Durchschnittstemperatur wird auf Weiß festgelegtund orange bildet den Durchschnitt + 2,5°C ab. Dadurch können Objekte unabhängig von der Umgebungstemperatur sehr gut erkannt werden. 
+Im **relativen Modus** dagegen wird die tiefste gemessene Temperatur auf Blau gesetzt und die höchste gemessene Temperatur auf Rot. Die Durchschnittstemperatur wird auf Weiß festgelegtund orange bildet den Durchschnitt + 2,5°C ab. Dadurch können Objekte unabhängig von der Umgebungstemperatur besser erkannt werden. 
+
+In welchem Modus man sich befindet, kann man sowohl an der leuchtenden LED (blau=relativer Modus, orange=Absoluter Modus, rot=keine Daten vom Sensor erhalten), als anhand des Textes am oberen Bildschirmrand (Abbildung : pink umrandet) erkennen. In dieser Zeile stehen je nach Modus auch Folgende Werte:
+* HIGH: die Höchste gemessene Temperatur
+* LOW: Die niedrigste gemessene Temperatur
+* AVG: Die durchschnittliche Temperatur
+* REF: Die Referenztemperatur im Programmcode, die als Weiß abgebildet wird
+
+Diese Temperaturen werden aus Platzgründen jeweils in dem Zehnfachen der Temperatur in Grad Celsius angegeben. Eine angezeigte Temperatur von 371C bedeutet also eine Temperatur von 37,1°C, bzw. 371 $\cdot$ 27,415K = 310,25 Kelvin.
+
+Abbildung : 
+![Bild von Hand über Sensor](./images/handywork..png)
+ In der Abbildung ist oben links das Setup mit Board und Sensor, darunter die Durchführung und rechts danneben die ergebnisse eines Durchlaufs zu sehen, bei dem ich meine Hand über den Sensor gehalten habe. Dabei zeigt das obere rechte Bild das Ergebnis im absoluten, das Untere die Temperatur im relativen Modus. Wie man erkennen kann ist der Kontrast im relativen Modus höher als im absoluten. 
 
 ## Funktionsweise der D6T MEMS Sensoren
 Für dieses Projekt war der Infrarotsensor D6T-32L-01A gegeben, der 32x32 Temperaturwerte einer Rechteckigen Fläche erfasst:
