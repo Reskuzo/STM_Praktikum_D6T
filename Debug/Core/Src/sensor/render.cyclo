@@ -1,5 +1,0 @@
-../Core/Src/sensor/render.c:14:10:pick_gradient_color	1
-../Core/Src/sensor/render.c:39:10:convert_temp_to_color_spec	5
-../Core/Src/sensor/render.c:67:10:convert_temp_to_color	1
-../Core/Src/sensor/render.c:73:6:display_data_on_lcd	5
-../Core/Src/sensor/render.c:97:6:display_data_on_lcd_rel_mode	5
