@@ -15,8 +15,7 @@
 #define H_CELL_COUNT 32
 #define V_CELL_COUNT 32
 #define ROOM_TEMP 26.f
-#define BODY_TEMP 36.f
-
+#define BODY_TEMP 34.f
 
 
 uint16_t pick_gradient_color(uint16_t color1, uint16_t color2, float temperature_gradient);
